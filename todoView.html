@@ -10,15 +10,24 @@ function loadList() {
 	})
 	.then(function(res){ //fetch的callback function，傳回值是promise物件: res
 		//將res的內容轉為文字，傳給下一個Callback function
-		return res.text();
-		//return res.json();
+		//return res.text();
+		return res.json();
 	})
 	.then(function(data){ //下一個callback function，參數data是上一個callback傳進來的文字
 		
 		//找到要顯示內容的div
 		let div = document.getElementById('main');
+		result="<table>";
+		for (r of data) {
+			result += "<tr>"
+			for(key of Object.keys(r)) {
+				result += "<td>"+r[key] +"</td>";
+			}
+			result += "</tr>"
+		}
+		
 		//將傳進來的文字放進div中
-		div.innerHTML=data;
+		div.innerHTML=result;
 	})
 }
 
