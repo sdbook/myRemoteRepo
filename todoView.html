@@ -17,10 +17,10 @@ function loadList() {
 		
 		//找到要顯示內容的div
 		let div = document.getElementById('main');
-		result="<table>";
-		for (r of data) {
+		result="<table border=1>";
+		for (let r of data) {
 			result += "<tr>"
-			for(key in r) {
+			for(let key in r) {
 				//console.log(item);
 				result += "<td>"+r[key] +"</td>";
 			}
@@ -59,18 +59,14 @@ function postForm() {
 	let mydat = new FormData(form);
 	//console.log(mydat)
 
-	let url="a1.insert.py";
+	let url="todoControl.php?act=addJob";
 	fetch(url,{
 		method: 'POST',
 		body: mydat // 將表單物件放入fetch的body屬性
 	})
 	.then(function(res){return res.text(); }) //取得傳回值，轉為文字
 	.then(function(data){ 
-		//找到要顯示內容的div
-		//let div = document.getElementById('main');
-		//將傳進來的文字放進div中
-		//div.innerHTML=data;
-		loadURL('2.list.php');
+		loadList();
 	})
 
 }
