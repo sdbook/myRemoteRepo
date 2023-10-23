@@ -22,7 +22,7 @@ while (	$rs = mysqli_fetch_assoc($result)) { //用迴圈逐筆取出
 	"</td><td>" , $rs['jobName'],
 	"</td><td>" , $rs['jobUrgent'], 
 	"</td><td>", $rs['jobContent'],
-	"</td><td><button onclick='loadEditForm(",$rs['id'] ,")'>edit</button>",
+	"</td><td><a href='3.editUI.php?id=",$rs['id'] ,"'>edit</a>",
 	"</td></tr>";
 }
 ?>

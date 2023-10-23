@@ -20,7 +20,8 @@ function loadList() {
 		result="<table>";
 		for (r of data) {
 			result += "<tr>"
-			for(key of Object.keys(r)) {
+			for(key in r) {
+				//console.log(item);
 				result += "<td>"+r[key] +"</td>";
 			}
 			result += "</tr>"
