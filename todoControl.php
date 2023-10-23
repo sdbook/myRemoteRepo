@@ -14,6 +14,11 @@ case "addJob":
 	//verify
 	addJob($jobName,$jobUrgent,$jobContent);
 	return;
+case "delJob":
+	$id=(int)$_REQUEST['id']; //$_GET, $_REQUEST
+	//verify
+	delJob($id);
+	return;
 default:
   
 }

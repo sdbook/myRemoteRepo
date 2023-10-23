@@ -20,9 +20,14 @@ function loadList() {
 		result="<table border=1>";
 		for (let r of data) {
 			result += "<tr>"
+			
+			let id=r['id'];
+			result += "<td><button onclick='delJob(" + id + ")'>刪</button></td>";
+			
 			for(let key in r) {
 				//console.log(item);
 				result += "<td>"+r[key] +"</td>";
+
 			}
 			result += "</tr>"
 		}
@@ -63,6 +68,19 @@ function postForm() {
 	fetch(url,{
 		method: 'POST',
 		body: mydat // 將表單物件放入fetch的body屬性
+	})
+	.then(function(res){return res.text(); }) //取得傳回值，轉為文字
+	.then(function(data){ 
+		loadList();
+	})
+
+}
+
+function delJob(id) {
+	//取得表單物件
+	let url="todoControl.php?act=delJob&id="+id;
+	fetch(url,{
+		method: 'POST'
 	})
 	.then(function(res){return res.text(); }) //取得傳回值，轉為文字
 	.then(function(data){ 
