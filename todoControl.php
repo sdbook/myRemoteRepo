@@ -19,6 +19,11 @@ case "delJob":
 	//verify
 	delJob($id);
 	return;
+case "setJobStatus":
+	$id=(int)$_REQUEST['id']; //$_GET, $_REQUEST
+	//verify
+	setJobDone($id);
+	return;
 default:
   
 }

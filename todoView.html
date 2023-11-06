@@ -18,13 +18,14 @@ function loadList() {
 		//找到要顯示內容的div
 		let div = document.getElementById('main');
 		result="<table border=1>";
-		for (let r of data) {
+		for (let r of data) { //iterate the results array
 			result += "<tr>"
 			
 			let id=r['id'];
 			result += "<td><button onclick='delJob(" + id + ")'>刪</button></td>";
+			result += "<td><button onclick='setJobDone(" + id + ")'>done</button></td>";
 			
-			for(let key in r) {
+			for(let key in r) { //iterate the key names of the record r
 				//console.log(item);
 				result += "<td>"+r[key] +"</td>";
 
@@ -88,6 +89,20 @@ function delJob(id) {
 	})
 
 }
+
+function setJobDone(id) {
+	//取得表單物件
+	let url="todoControl.php?act=setJobStatus&id="+id;
+	fetch(url,{
+		method: 'POST'
+	})
+	.then(function(res){return res.text(); }) //取得傳回值，轉為文字
+	.then(function(data){ 
+		loadList();
+	})
+
+}
+
 
 </script>
 </head>
