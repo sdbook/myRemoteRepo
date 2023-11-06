@@ -10,12 +10,13 @@
 	<h1>This is the main page.</h1>
 	<button @click="setUI('editForm')">Load Add Form</button>
 	<table border=1>
-		<tr><td>序號</td><td>工作名稱</td><td>緊急程度</td><td>內容說明</td><td>-</td></tr>
+		<tr><td>序號</td><td>工作名稱</td><td>緊急程度</td><td>內容說明</td><td>狀態</td><td>-</td></tr>
 		<tr v-for="job in dat">
 			<td>{{job.id}}</td>
 			<td>{{job.jobName}}</td>
 			<td>{{job.jobUrgent}}</td>
 			<td>{{job.jobContent}}</td>
+			<td>{{job.status}}</td>
 			<td><button @click="delJob(job.id)">刪</button></td>
 		</tr>
 	</table>
@@ -58,8 +59,9 @@ const todoApp= Vue.createApp({
 			.then(function(myJson) {
 				//we are inside the callback function, now `this` means the function, not vm6
 				//we will use `that` to access vm6
+
 				that.dat = myJson;
-				//vm6.dat = myJson;
+				//todoApp.dat = myJson;
 			});
 		},
 		delJob: function (id) {
