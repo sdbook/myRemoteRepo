@@ -8,7 +8,7 @@
 <div id="main">
 <div id="list" v-if="UI=='main'">
 	<h1>This is the main page.</h1>
-	<button @click="setUI('editForm')">Load Add Form</button>
+	<button @click="setAddUI()">Load Add Form</button>
 	<table border=1>
 		<tr><td>序號</td><td>工作名稱</td><td>緊急程度</td><td>內容說明</td><td>狀態</td><td>-</td></tr>
 		<tr v-for="job in dat">
@@ -17,7 +17,7 @@
 			<td>{{job.jobUrgent}}</td>
 			<td>{{job.jobContent}}</td>
 			<td>{{job.status}}</td>
-			<td><button @click="delJob(job.id)">刪</button></td>
+			<td><button @click="delJob(job.id)">刪</button><button @click="setEditUI(job)">改</button></td>
 		</tr>
 	</table>
 </div>
@@ -92,6 +92,19 @@ const todoApp= Vue.createApp({
 				that.setUI('main');
 				that.loadList();
 			})
+		},
+		setEditUI: function(job) {
+			this.newJob=job;
+			this.setUI('editForm');
+		},
+		setAddUI: function() {
+			this.newJob={
+				id: -1,
+				jobName: '',
+				jobUrgent: '',
+				jobContent: ''
+			};
+			this.setUI('editForm');
 		},
 		setUI: function(page) {
 			this.UI=page;

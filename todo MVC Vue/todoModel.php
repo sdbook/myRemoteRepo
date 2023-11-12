@@ -15,12 +15,17 @@ function getJobList() {
 	return $rows;
 }
 
-function addJob($jobName,$jobUrgent,$jobContent) {
+function addJob($jobName,$jobUrgent,$jobContent,$jobID) {
 	global $db;
-
-	$sql = "insert into todo (jobName, jobUrgent, jobContent) values (?, ?, ?)"; //SQL中的 ? 代表未來要用變數綁定進去的地方
-	$stmt = mysqli_prepare($db, $sql); //prepare sql statement
-	mysqli_stmt_bind_param($stmt, "sss", $jobName, $jobUrgent,$jobContent); //bind parameters with variables, with types "sss":string, string ,string
+	if($jobID>0) {
+		$sql = "update todo set jobName=?, jobUrgent=?, jobContent=? where id=?"; //SQL中的 ? 代表未來要用變數綁定進去的地方
+		$stmt = mysqli_prepare($db, $sql); //prepare sql statement
+		mysqli_stmt_bind_param($stmt, "sssi", $jobName, $jobUrgent,$jobContent,$jobID); //bind parameters with variables, with types "sss":string, string ,string
+	} else {
+		$sql = "insert into todo (jobName, jobUrgent, jobContent) values (?, ?, ?)"; //SQL中的 ? 代表未來要用變數綁定進去的地方
+		$stmt = mysqli_prepare($db, $sql); //prepare sql statement
+		mysqli_stmt_bind_param($stmt, "sss", $jobName, $jobUrgent,$jobContent); //bind parameters with variables, with types "sss":string, string ,string
+	}
 	mysqli_stmt_execute($stmt);  //執行SQL
 	return True;
 }
