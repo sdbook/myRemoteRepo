@@ -9,6 +9,8 @@
 <div id="main">
 <div id="list" v-if="UI=='main'">
 	<h1>This is the main page.</h1>
+	<hr/>
+	{{info}}
 </div>
 <div v-if="UI=='loginForm'">
 	ID: <input type="text"  v-model="id"/> <br/>
@@ -22,7 +24,8 @@ const todoApp= Vue.createApp({
 		return {
 			UI: '',
 			id: '',
-			pwd: ''
+			pwd: '',
+			info: 'xx'
 		}
 	},
 	methods: {
@@ -53,9 +56,26 @@ const todoApp= Vue.createApp({
 					console.log(data);
 					if (that.checkLogin()) {
 						that.setUI('main');
+						that.loadInfo();
 					} else {
 						alert('incorrect id or pwd.');
 					}				
+				})
+		},
+		loadInfo: function() {
+				const that=this;
+				let mydat = new FormData();
+				mydat.append( "act", 'showInfo');
+				let url="loginCheck.php";
+				//url="loginCheck.py";
+				fetch(url,{
+					method: 'POST',
+					body: mydat
+				})
+				.then(function(res){return res.text(); }) //取得傳回值，轉為文字
+				.then(function(data){
+					that.info = data;
+					console.log(999,data);
 				})
 		}
 	},

@@ -12,6 +12,15 @@ case "login":
 		setcookie('loginRole',"0");
 	}
 	return;
+case 'showInfo':
+	//檢查是否已登入
+	$loginRole=$_COOKIE['loginRole'];
+	if ($loginRole>'0') {
+		$msg="You've logged in. Your role is $loginRole.";
+	} else {
+		$msg="You need login to use this funtion.";
+	}
+	echo $msg;
 default:
 }
 
