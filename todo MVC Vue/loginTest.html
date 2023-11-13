@@ -11,11 +11,14 @@
 	<h1>This is the main page.</h1>
 	<hr/>
 	{{info}}
+	<hr/>
+	<input type='button' @click="logout()" value="logout"/>
+	
 </div>
 <div v-if="UI=='loginForm'">
 	ID: <input type="text"  v-model="id"/> <br/>
 	Password: <input type="text" v-model="pwd" />
-	<input type='button' @click="login()" value="login">
+	<input type='button' @click="login()" value="login"/> <br/>
 </div>
 </div>
 <script>
@@ -35,7 +38,11 @@ const todoApp= Vue.createApp({
 		checkLogin: function() {
 			const role=Cookies.get('loginRole');
 			console.log(role);
-			return (role >'0');
+			if (role >'0') {
+				this.setUI('main');
+			} else {
+				this.setUI('loginForm');
+			}
 		},
 		login: function() {
 				const that=this;
@@ -46,7 +53,7 @@ const todoApp= Vue.createApp({
 				mydat.append( "act", 'login');
 				console.log(mydat);
 				let url="loginCheck.php";
-				url="loginCheck.py";
+				//url="loginCheck.py";
 				fetch(url,{
 					method: 'POST',
 					body: mydat // 將表單物件放入fetch的body屬性
@@ -54,12 +61,8 @@ const todoApp= Vue.createApp({
 				.then(function(res){return res.text(); }) //取得傳回值，轉為文字
 				.then(function(data){
 					console.log(data);
-					if (that.checkLogin()) {
-						that.setUI('main');
-						that.loadInfo();
-					} else {
-						alert('incorrect id or pwd.');
-					}				
+					that.checkLogin();
+					that.loadInfo();
 				})
 		},
 		loadInfo: function() {
@@ -75,17 +78,18 @@ const todoApp= Vue.createApp({
 				.then(function(res){return res.text(); }) //取得傳回值，轉為文字
 				.then(function(data){
 					that.info = data;
-					console.log(999,data);
 				})
+		},
+		logout: function() {
+			Cookies.set('loginRole', 0, { path: '' }); //path: '' means the cookie is for the current path
+			this.checkLogin();
 		}
+		
 	},
 	created() {		
-		if (this.checkLogin() ) {
-			this.setUI('main');
-		} else {
-			this.setUI('loginForm');
-		}
+		this.checkLogin();
 	}
 }).mount("#main");
+
 </script>
 </body></html>

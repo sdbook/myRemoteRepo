@@ -7,15 +7,15 @@ case "login":
 	$pwd=$_REQUEST['pwd'];
 	//verify
 	if ($id=='1' && $pwd=='2') {
-		setcookie('loginRole',"1");
+		setcookie('loginRole',1);
 	} else {
-		setcookie('loginRole',"0");
+		setcookie('loginRole',0);
 	}
 	return;
 case 'showInfo':
 	//檢查是否已登入
 	$loginRole=$_COOKIE['loginRole'];
-	if ($loginRole>'0') {
+	if ($loginRole>0) {
 		$msg="You've logged in. Your role is $loginRole.";
 	} else {
 		$msg="You need login to use this funtion.";
