@@ -1,0 +1,106 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="https://unpkg.com/vue@next"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
+
+<body >
+<hr />
+<div id="main">
+<div id="list" v-if="UI=='main'">
+	<h1>This is the main page.</h1>
+	<hr/>
+	<input type='button' @click="logout()" value="logout"/>
+	
+</div>
+<div v-if="UI=='loginForm'">
+	ID: <input type="text"  v-model="id"/> <br/>
+	Password: <input type="text" v-model="pwd" />
+	<input type='button' @click="login()" value="login"/> <br/>
+</div>
+	<hr/>
+	{{info}}
+	<input type='button' @click="loadInfo()" value="load Info"/> <br/>
+</div>
+<script>
+const role=function() {
+	let a=10;
+	function get() {
+	return a;
+	}
+}
+const todoApp= Vue.createApp({
+	data() {
+		return {
+			UI: '',
+			id: '',
+			pwd: '',
+			info: 'xx'
+		}
+	},
+	methods: {
+		setUI: function(page) {
+			this.UI=page;
+		},
+		checkLogin: function() {
+			/*
+			const role=Cookies.get('loginRole');
+			sessionStorage.setItem('role', role)
+			console.log(role, this.login.myRole);
+			*/
+			const role=Cookies.get('loginRole');
+			if (role >0) {
+				this.setUI('main');
+			} else {
+				this.setUI('loginForm');
+			}
+		},
+		login: function() {
+				const that=this;
+				let mydat = new FormData();
+				mydat.append( "id", this.id);
+				// you may also use document.getElementById('loginID').value to get that field
+				mydat.append( "pwd", this.pwd);
+				mydat.append( "act", 'login');
+
+				let url="loginCheck.php";
+				//url="loginCheck.py";
+				fetch(url,{
+					method: 'POST',
+					body: mydat // 將表單物件放入fetch的body屬性
+				})
+				.then(function(res){return res.text(); }) //取得傳回值，轉為文字
+				.then(function(data){
+					console.log(data);
+					//server 會設定 loginRole cookie, 呼叫檢查的函數
+					that.checkLogin();
+				})
+		},
+		loadInfo: function() {
+				const that=this;
+				let mydat = new FormData();
+				mydat.append( "act", 'showInfo');
+				let url="loginCheck.php";
+				//url="loginCheck.py";
+				fetch(url,{
+					method: 'POST',
+					body: mydat
+				})
+				.then(function(res){return res.text(); }) //取得傳回值，轉為文字
+				.then(function(data){
+					that.info = data;
+				})
+		},
+		logout: function() {
+			Cookies.set('loginRole', 0, { path: '' }); //path: '' means the cookie is for the current path
+			this.checkLogin();
+		}
+		
+	},
+	created() {
+		this.checkLogin();
+	}
+}).mount("#main");
+
+</script>
+</body></html>
