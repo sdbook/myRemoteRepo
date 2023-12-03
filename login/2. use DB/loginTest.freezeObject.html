@@ -1,7 +1,9 @@
 <html><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script type="text/javascript" src="https://unpkg.com/vue@next"></script>
+<!--
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+-->
 </head>
 
 <body >
@@ -23,19 +25,19 @@
 	<input type='button' @click="loadInfo()" value="load Info"/> <br/>
 </div>
 <script>
-const role=function() {
-	let a=10;
-	function get() {
-	return a;
-	}
+
+const myRole={
+	role: 0
 }
+
 const todoApp= Vue.createApp({
 	data() {
 		return {
 			UI: '',
 			id: '',
 			pwd: '',
-			info: 'xx'
+			info: 'xx',
+			myRole: 0
 		}
 	},
 	methods: {
@@ -48,8 +50,8 @@ const todoApp= Vue.createApp({
 			sessionStorage.setItem('role', role)
 			console.log(role, this.login.myRole);
 			*/
-			const role=Cookies.get('loginRole');
-			if (role >0) {
+			//myRole is a global object
+			if (myRole.role >0) {
 				this.setUI('main');
 			} else {
 				this.setUI('loginForm');
@@ -63,16 +65,20 @@ const todoApp= Vue.createApp({
 				mydat.append( "pwd", this.pwd);
 				mydat.append( "act", 'login');
 
-				let url="http://localhost/1121SE/remoteRepo/login/2.%20use%20DB/loginCheck.php";
+				let url="loginCheck.php";
 				//url="loginCheck.py";
 				fetch(url,{
 					method: 'POST',
 					body: mydat // 將表單物件放入fetch的body屬性
 				})
-				.then(function(res){return res.json(); }) //取得傳回值，轉為文字
+				.then(function(res){return res.json(); }) //取得傳回值，轉為json
 				.then(function(data){
 					console.log(data);
-					//server 會設定 loginRole cookie, 呼叫檢查的函數
+					//server 設定的cookie,httponly:true時, client 端讀不到,使用json裡的資料
+					if (data.msg=="OK") { //login success
+						myRole.role = data.role; //keep the info in myRole
+						Object.freeze(myRole); //freeze the global object myRole to be immutable
+					}
 					that.checkLogin();
 				})
 		},
@@ -92,8 +98,15 @@ const todoApp= Vue.createApp({
 				})
 		},
 		logout: function() {
-			Cookies.set('loginRole', 0, { path: '' }); //path: '' means the cookie is for the current path
-			this.checkLogin();
+			//發request請server改cookie
+			const that=this;
+			let url="loginCheck.php?act=logout";
+			fetch(url)
+			.then(function(res){return res.text(); }) //取得傳回值，轉為文字
+			.then(function(data){
+				//reload the page to re-init the global myRole
+				location.reload();
+			})
 		}
 		
 	},

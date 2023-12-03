@@ -1,5 +1,6 @@
 <?php
 require("userModel.php");
+//header("Access-Control-Allow-Origin: http://localhost:8000");
 
 $act=$_REQUEST['act'];
 switch ($act) {
@@ -8,13 +9,19 @@ case "login":
 	$pwd=$_REQUEST['pwd'];
 	//verify with DB
 
-	$role = login($id,$pwd);
-	setcookie('loginRole',$role);
-	//setcookie('loginRole',$role,httponly:true); //another way to restrict the cookie visibility
-	$msg=[
-		"msg" => "OK",
-		"role" => $role
-	];
+	$role = login($id,$pwd); //use the login function in userModel
+	setcookie('loginRole',$role,httponly:true); //another way to restrict the cookie visibility
+	if ($role > 0) {
+		$msg=[
+			"msg" => "OK",
+			"role" => $role
+		];
+	} else {
+		$msg=[
+			"msg" => "NO",
+			"role" => 0
+		];
+	}
 	echo json_encode($msg);
 	return;
 	break;
