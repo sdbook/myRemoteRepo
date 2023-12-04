@@ -10,8 +10,8 @@ case "login":
 	//verify with DB
 
 	$role = login($id,$pwd); //use the login function in userModel
-	//setcookie('loginRole',$role,httponly:true); //another way to restrict the cookie visibility
-	setcookie('loginRole',$role); //another way to restrict the cookie visibility
+	setcookie('loginRole',$role,httponly:true); //another way to restrict the cookie visibility
+	//setcookie('loginRole',$role); //another way to restrict the cookie visibility
 	if ($role > 0) {
 		$msg=[
 			"msg" => "OK",
@@ -37,8 +37,8 @@ case 'showInfo':
 	echo $msg;
 	break;
 case 'logout':
-	//setcookie('loginRole',0,httponly:true);
-	setcookie('loginRole',0);
+	setcookie('loginRole',0,httponly:true);
+	//setcookie('loginRole',0);
 	break;
 default:
 }
