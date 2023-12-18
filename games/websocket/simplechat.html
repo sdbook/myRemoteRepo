@@ -26,25 +26,22 @@ source: https://gist.github.com/tanmaykm/5111225
 			var s; //socket object for connection
 			function doInit() {
 				try {
-					let host = "ws://localhost:4545/"; //設定socker server的ip:port
-					/*if(window.location.hostname) {
-						host = "ws://" + window.location.hostname + ":4545/";
-					}*/
-
+					let host = "ws://10.32.21.247:4545/"; //設定socker server的ip:port
 					s = new WebSocket(host); //建立socket元件
 					//設定幾個主要事件
 					s.onopen = function (e) { 
 						log_msg("connected...");
 						nickname= document.getElementById('user').value;
-						s.send("LOGIN###"+nickname)
+						//s.send("LOGIN###"+nickname)
 					};
 					s.onclose = function (e) { log_msg("connection closed."); };
 					s.onerror = function (e) { log_msg("connection error."); };
 					
 					//當server送訊息來時
 					s.onmessage = function (e) {
-						strs = e.data.split('###');
-						log_msg(strs[0]+":" + strs[1]);
+						console.log(e.data)
+						//strs = e.data.split('###');
+						log_msg(e.data);
 					};
 				} catch (ex) {
 					log_msg("connection exception:" + ex);
